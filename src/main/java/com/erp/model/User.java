@@ -1,5 +1,8 @@
 package com.erp.model;
 import java.util.Set;
+
+import org.antlr.v4.runtime.misc.NotNull;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -22,6 +25,8 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @SuppressWarnings("deprecation")
+    @NotNull()
     private String name;
     private String email;
     private String password;
