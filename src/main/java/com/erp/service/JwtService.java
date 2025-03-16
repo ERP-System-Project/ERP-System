@@ -19,7 +19,7 @@ import java.util.function.Function;
 public class JwtService {
 
 
-    private final String SECRET ;
+    private final String SECRET;
 
     public JwtService() {
         try{
@@ -40,7 +40,7 @@ public class JwtService {
                 .add(customClaims)
                 .subject(username)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 60 * 60 * 30))
+                .expiration(new Date(System.currentTimeMillis() + 1000* 60 * 60 * 30))
                 .and() // Finalize claims
                 .signWith(getKey()) // Sign the JWT with a key
                 .compact(); // Compact the JWT into a string

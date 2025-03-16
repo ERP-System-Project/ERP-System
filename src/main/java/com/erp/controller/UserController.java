@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,7 +29,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<UserDTO> createUser(@RequestBody User user) {
-        User createdUser = userService.createUser(user);
+        User createdUser = userService.register(user);
         UserDTO createdUserDTO = convertToDTO(createdUser);
         return ResponseEntity.ok(createdUserDTO);
     }
@@ -54,6 +55,18 @@ public class UserController {
         User user = userService.assignRolesToUser(userId, roles);
         UserDTO userDTO = convertToDTO(user);
         return ResponseEntity.ok(userDTO);
+    }
+
+    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+    @PostMapping("/register")
+    public User register(@RequestBody User user) {
+        user.setPassword(encoder.encode(user.getPassword()));
+        return userService.register(user);
+    }
+
+    @PostMapping("/login")
+    public String login(@RequestBody User user){
+        return userService.verify(user);
     }
 
     private UserDTO convertToDTO(User user) {

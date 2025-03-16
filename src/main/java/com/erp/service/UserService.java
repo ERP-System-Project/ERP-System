@@ -3,7 +3,10 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.Authentication;
 
 import com.erp.model.Role;
 import com.erp.model.User;
@@ -15,7 +18,13 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
-    public User createUser(User user){
+    @Autowired
+    AuthenticationManager authManager;
+
+    @Autowired
+    JwtService jwtService;
+
+    public User register(User user){
         return userRepository.save(user);
     }
 
@@ -32,4 +41,14 @@ public class UserService {
         user.setRoles(roles);
         return userRepository.save(user);
     }
+
+    public String verify(User user) {
+        Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(user.getName(), user.getPassword()));
+        if(authentication.isAuthenticated()){
+            //return jwtService.generateToken(user.getName());
+            return "Success";
+        }
+        return "Fail";
+    }
+
 }
