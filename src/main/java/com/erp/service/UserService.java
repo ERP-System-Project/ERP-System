@@ -12,6 +12,7 @@ import com.erp.model.Role;
 import com.erp.model.User;
 import com.erp.repository.UserRepository;
 
+
 @Service
 public class UserService {
 
@@ -43,10 +44,10 @@ public class UserService {
     }
 
     public String verify(User user) {
+
         Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(user.getName(), user.getPassword()));
         if(authentication.isAuthenticated()){
-            //return jwtService.generateToken(user.getName());
-            return "Success";
+            return jwtService.generateToken(user.getName());
         }
         return "Fail";
     }

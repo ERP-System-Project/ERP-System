@@ -22,19 +22,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api/user")
-public class UserController {
+public class    UserController {
 
     @Autowired
     UserService userService;
 
-    @PostMapping
+    @PostMapping("createUser")
     public ResponseEntity<UserDTO> createUser(@RequestBody User user) {
         User createdUser = userService.register(user);
         UserDTO createdUserDTO = convertToDTO(createdUser);
         return ResponseEntity.ok(createdUserDTO);
     }
 
-    @GetMapping 
+    @GetMapping("getAllUsers")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         List<User> users = userService.getAllUsers();
         List<UserDTO> userDTOs = users.stream()
