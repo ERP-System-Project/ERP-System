@@ -15,6 +15,7 @@ import com.erp.model.Role;
 import com.erp.model.User;
 import com.erp.service.UserService;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api/user")
+@CrossOrigin(origins = "http://localhost:3000")
 public class    UserController {
 
     @Autowired
@@ -44,7 +46,7 @@ public class    UserController {
     }
 
     @GetMapping("/email")
-    public ResponseEntity<UserDTO> getUserByEmail(String email) {
+    public ResponseEntity<UserDTO> getUserByEmail(@RequestBody String email) {
         User user = userService.getUserByEmail(email);
         UserDTO userDTO = convertToDTO(user);
         return ResponseEntity.ok(userDTO);
@@ -65,7 +67,7 @@ public class    UserController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody User user){
+    public ResponseEntity<?> login(@RequestBody User user){
         return userService.verify(user);
     }
 

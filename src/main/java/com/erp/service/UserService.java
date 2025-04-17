@@ -1,8 +1,10 @@
 package com.erp.service;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -43,13 +45,21 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public String verify(User user) {
+    public ResponseEntity<?> verify(User user) {
+        try {
+                Authentication authentication = authManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(user.getName(), user.getPassword())
+                );
 
-        Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(user.getName(), user.getPassword()));
-        if(authentication.isAuthenticated()){
-            return jwtService.generateToken(user.getName());
+                if (authentication.isAuthenticated()) {
+                    String token = jwtService.generateToken(user.getName());
+                    return ResponseEntity.ok().body(Map.of("token", token));
+                } else {
+                    return ResponseEntity.status(401).body(Map.of("error", "Authentication failed")); 
+                }
+            } catch (Exception e) {
+                return ResponseEntity.status(401).body(Map.of("error", "Invalid credentials")); 
         }
-        return "Fail";
     }
 
 }
